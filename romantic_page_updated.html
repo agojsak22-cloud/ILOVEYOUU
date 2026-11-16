@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100b18">
+<title>Для тебе, моя любіма ❤️</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100svh; overflow: hidden;
+    display: grid; place-items: center;
+    font-family: Georgia, "Times New Roman", serif;
+    color: #fff5f7;
+    background:
+      radial-gradient(ellipse at 50% 42%, rgba(116,45,86,.35), transparent 48%),
+      radial-gradient(ellipse at 15% 85%, rgba(65,39,96,.35), transparent 42%),
+      linear-gradient(145deg, #090812, #1b1020 55%, #0b0a15);
+  }
+  .stars, .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+  .stars i {
+    position: absolute; width: 2px; height: 2px; border-radius: 50%;
+    background: #fff; opacity: .5; box-shadow: 0 0 9px #fff;
+    animation: twinkle 3s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { from {opacity:.15; transform:scale(.7)} to {opacity:.9; transform:scale(1.5)} }
+  .heart {
+    position: absolute; bottom: -40px; color: rgba(255,155,190,.45);
+    font-family: Arial, sans-serif; animation: floatUp linear infinite;
+    text-shadow: 0 0 16px rgba(255,105,160,.45);
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity:0 }
+    12% { opacity:.65 }
+    88% { opacity:.5 }
+    100% { transform: translateY(-115vh) rotate(24deg); opacity:0 }
+  }
+  main {
+    position: relative; z-index: 2; width: min(92vw, 760px);
+    padding: clamp(28px, 7vw, 62px) 22px; text-align: center;
+    border: 1px solid rgba(255,205,224,.18); border-radius: 30px;
+    background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+    box-shadow: 0 25px 90px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.08);
+    backdrop-filter: blur(12px);
+  }
+  .eyebrow {
+    color: #eab5ca; letter-spacing: .22em; text-transform: uppercase;
+    font: 11px/1.5 Arial, sans-serif; margin-bottom: 22px;
+  }
+  h1 {
+    margin: 0 0 18px; font-weight: 400; line-height: 1.15;
+    font-size: clamp(34px, 8vw, 66px);
+    text-shadow: 0 0 28px rgba(255,137,178,.28);
+  }
+  .intro { color: #e8cbd7; font-size: clamp(15px, 3.8vw, 19px); margin: 0 0 36px; }
+  .love-line {
+    min-height: 1.6em; display: flex; justify-content: center; align-items: center;
+    gap: 12px; flex-wrap: wrap; font-size: clamp(25px, 6vw, 44px);
+    color: #ffe4ed; letter-spacing: .01em;
+    text-shadow: 0 0 22px rgba(255,139,180,.42);
+  }
+  #phrase { opacity: 1; transition: opacity .55s ease, transform .55s ease; }
+  #phrase.fade { opacity: 0; transform: translateY(9px); }
+  .tiny-heart { color: #ff9dbd; font: 24px Arial, sans-serif; }
+  .subline { margin: 24px 0 30px; color: #cbaebb; font: 12px Arial, sans-serif; letter-spacing: .12em; }
+  button {
+    border: 1px solid rgba(255,211,228,.5); border-radius: 999px;
+    padding: 14px 25px; color: #fff7fa; background: linear-gradient(135deg,#a84e78,#713b69);
+    font: 15px Arial, sans-serif; cursor: pointer;
+    box-shadow: 0 8px 28px rgba(163,66,111,.25);
+    transition: transform .2s ease, filter .2s ease;
+  }
+  button:hover { transform: translateY(-2px); filter: brightness(1.12); }
+  button:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+  .hint { margin: 14px 0 0; color: #bda5b2; font: 11px/1.5 Arial, sans-serif; }
+  .music-frame { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .footer { margin-top: 30px; color: rgba(255,220,232,.55); font: 11px Arial,sans-serif; letter-spacing: .08em; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true" id="stars"></div>
+<div class="hearts" aria-hidden="true" id="hearts"></div>
+<main>
+  <div class="eyebrow">для найособливішої дівчини</div>
+  <h1>Для тебе,<br>моя любіма <span style="color:#ff9dbd">♥</span></h1>
+  <p class="intro">Є дещо, що я хочу сказати тобі всіма мовами світу…</p>
+  <div class="love-line" aria-live="polite">
+    <span id="phrase">Я тебе кохаю</span><span class="tiny-heart">♥</span>
+  </div>
+  <div class="subline" id="language">УКРАЇНСЬКА</div>
+  <p class="hint" id="hint">No. 1 Party Anthem · Arctic Monkeys</p>
+  <div class="footer">скільки б мов не було сенс один</div>
+  <div class="music-frame" aria-hidden="true" id="player"></div>
+</main>
+<script>
+const phrases = [
+  ["Я тебе кохаю","Українська"], ["I love you","Англійська"],
+  ["Je t’aime","Французька"], ["Te amo","Іспанська"],
+  ["Ti amo","Італійська"], ["Ich liebe dich","Німецька"],
+  ["Kocham cię","Польська"], ["愛してる","Японська"],
+  ["사랑해","Корейська"], ["我爱你","Китайська"],
+  ["Eu te amo","Португальська"], ["Seni seviyorum","Турецька"],
+  ["Σ’ αγαπώ","Грецька"], ["Miluji tě","Чеська"],
+  ["Te iubesc","Румунська"], ["Ik hou van jou","Нідерландська"],
+  ["Jag älskar dig","Шведська"], ["Jeg elsker deg","Норвезька"],
+  ["أحبك","Арабська"], ["მიყვარხარ","Грузинська"],
+  ["Szeretlek","Угорська"], ["Rakastan sinua","Фінська"],
+  ["Volim te","Хорватська"], ["Ég elska þig","Ісландська"],
+  ["Te amo","Латинська"], ["Я цябе кахаю","Білоруська"],
+  ["Обичам те","Болгарська"], ["Miluji tě","Словацька"],
+  ["Ma armastan sind","Естонська"], ["Es tevi mīlu","Латвійська"],
+  ["Aš tave myliu","Литовська"], ["Kuv hlub koj","Гавайська"]
+];
+let index = 0;
+const phrase = document.getElementById("phrase");
+const language = document.getElementById("language");
+setInterval(() => {
+  phrase.classList.add("fade");
+  setTimeout(() => {
+    index = (index + 1) % phrases.length;
+    phrase.textContent = phrases[index][0];
+    language.textContent = phrases[index][1].toLocaleUpperCase("uk-UA");
+    phrase.classList.remove("fade");
+  }, 560);
+}, 2600);
+
+const stars = document.getElementById("stars");
+for (let i=0;i<65;i++) {
+  const s=document.createElement("i");
+  s.style.left=(Math.random()*100)+"%";
+  s.style.top=(Math.random()*100)+"%";
+  s.style.animationDelay=(Math.random()*4)+"s";
+  s.style.animationDuration=(2+Math.random()*3)+"s";
+  stars.appendChild(s);
+}
+const hearts = document.getElementById("hearts");
+for (let i=0;i<13;i++) {
+  const h=document.createElement("span");
+  h.className="heart"; h.textContent=["♡","♥","ღ"][i%3];
+  h.style.left=(Math.random()*100)+"%";
+  h.style.fontSize=(12+Math.random()*19)+"px";
+  h.style.animationDuration=(12+Math.random()*12)+"s";
+  h.style.animationDelay=(-Math.random()*20)+"s";
+  hearts.appendChild(h);
+}
+// Attempt autoplay from 02:17. Browsers may block sound until the visitor interacts.
+const player = document.getElementById("player");
+player.innerHTML = '<iframe width="1" height="1" src="https://www.youtube-nocookie.com/embed/mGUjVbsYG6E?start=137&autoplay=1&loop=1&playlist=mGUjVbsYG6E" title="No. 1 Party Anthem — Arctic Monkeys" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+
+</script>
+</body>
+</html>
